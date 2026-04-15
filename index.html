@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Changer Pro - Liquid Glass Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="home.css">
+</head>
+<body>
+    <div class="liquid-bg">
+        <div class="fluid-shape blob-1"></div>
+        <div class="fluid-shape blob-2"></div>
+        <div class="fluid-shape blob-3"></div>
+        <div class="glass-overlay"></div>
+    </div>
+
+    <header class="navbar glass-panel">
+        <div class="nav-left">
+            <div class="logo-box crazy-glow-logo">C</div>
+            <h1 class="brand-title">CHANGER PRO</h1>
+        </div>
+
+        <div class="nav-center">
+            <div class="search-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-box" placeholder="Search features, fonts, pdf tools...">
+            </div>
+        </div>
+
+        <div class="nav-right">
+            <button class="nav-link interactive" id="loginBtnNav" onclick="window.location.href='login.html'">Login</button>
+            <button class="nav-link signup-btn interactive" id="signupBtnNav" onclick="window.location.href='sigup.html'">Sign Up Free</button>
+            
+            <button class="nav-link interactive" id="logoutBtnNav" style="display: none; background: #ff3d00; border: none; padding: 8px 16px; border-radius: 8px; color: white; cursor: pointer;">Logout</button>
+            
+            <button class="three-dot-menu interactive" id="menuToggleBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <aside class="slide-panel glass-panel" id="slidePanel">
+        <div class="panel-header">
+            <h2 class="live-text-gradient">Future Tools</h2>
+            <button class="close-btn interactive" id="closePanelBtn">✕</button>
+        </div>
+        <ul class="panel-links">
+            <li><a href="#" class="interactive">📄 Pro PDF Engine (New)</a></li>
+            <li><a href="#" class="interactive">🚀 AI Generation (Beta)</a></li>
+            <li><a href="#" class="interactive">🎨 Vector Studio</a></li>
+            <li><a href="#" class="interactive">🎥 Screen Recorder</a></li>
+            <li><a href="#" class="interactive">☁️ Cloud Sync</a></li>
+        </ul>
+    </aside>
+
+    <main class="container">
+        <section class="hero-section">
+            
+            <div class="hero-content">
+                <div class="badge interactive" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid #38bdf8;">v10.0 MULTI-PAGE PDF EDITION</div>
+                
+                <h2 class="main-heading live-text-effect">
+                    THE ULTIMATE<br>IMAGE & PDF EDITOR
+                </h2>
+                
+                <p class="sub-heading">A sophisticated, modern, cyber-futuristic workspace. Edit screenshots or multi-page PDFs instantly with powerful Box Eraser, Ruler Grid, and Liquid Glass aesthetics.</p>
+                
+                <div class="action-buttons">
+                    <button class="primary-btn interactive" id="startEditingBtn">Start Editing Now 🚀</button>
+                    <button class="secondary-btn interactive">Explore Features</button>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="visual-box" id="visualBox">
+                    
+                    <div class="rotating-element liquid-mockup" id="rotatingElement">
+                        <div class="mockup-header">
+                            <div class="mac-dots">
+                                <span class="red"></span><span class="yellow"></span><span class="green"></span>
+                            </div>
+                        </div>
+                        <div class="mockup-body">
+                            <div class="mockup-sidebar"></div>
+                            <div class="mockup-canvas"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="as-tech-overlay">
+                        <h1 class="as-tech-text live-text-effect">AS TECH</h1>
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </section>
+
+        <section class="features-section" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-top: 50px;">
+            
+            <div class="feature-card glass-panel interactive" style="flex: 1; min-width: 250px;">
+                <div class="card-icon cyan-glow">🟦</div>
+                <h3>Smart Box Eraser</h3>
+                <p>Instantly patch and erase sensitive data from images and PDFs with perfect background color matching.</p>
+            </div>
+
+            <div class="feature-card glass-panel interactive" style="flex: 1; min-width: 250px;">
+                <div class="card-icon" style="color: #f87171; text-shadow: 0 0 15px rgba(248, 113, 113, 0.6); font-size: 2rem; margin-bottom: 15px;">📄</div>
+                <h3>Multi-Page PDF Engine</h3>
+                <p>Upload PDFs, edit multiple pages seamlessly with memory-save, and export back to high-quality PDF format.</p>
+            </div>
+
+            <div class="feature-card glass-panel interactive" style="flex: 1; min-width: 250px;">
+                <div class="card-icon purple-glow">✨</div>
+                <h3>75+ Premium Fonts</h3>
+                <p>Access exclusive typography, including official PDF fonts, with 9 different weight scales for perfect text matching.</p>
+            </div>
+
+            <div class="feature-card glass-panel interactive" style="flex: 1; min-width: 250px;">
+                <div class="card-icon pink-glow">📏</div>
+                <h3>Grid & Smart Ruler</h3>
+                <p>Studio-grade precision. Auto-snap objects and use the exact X/Y coordinate lines for pixel-perfect placement.</p>
+            </div>
+
+        </section>
+    </main>
+
+    <script type="module" src="home.js"></script>
+</body>
+</html>

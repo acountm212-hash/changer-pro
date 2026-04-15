@@ -1,0 +1,263 @@
+/* =====================================
+   Variables & Reset
+====================================== */
+:root {
+    --bg-main: #030305;
+    --text-main: #ffffff;
+    --text-muted: #a0a0b0;
+    --cyan: #00e5ff;
+    --purple: #9d00ff;
+    --pink: #ff006a;
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* =====================================
+   LIQUID BACKGROUND ANIMATION
+====================================== */
+.liquid-bg {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2;
+    overflow: hidden; background: #000;
+}
+
+.fluid-shape {
+    position: absolute;
+    filter: blur(90px);
+    opacity: 0.6;
+    animation: liquidMove 20s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.blob-1 { width: 600px; height: 600px; background: var(--purple); top: -200px; left: -100px; border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+.blob-2 { width: 500px; height: 500px; background: var(--cyan); bottom: -100px; right: -50px; border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; animation-delay: -5s; }
+.blob-3 { width: 400px; height: 400px; background: var(--pink); top: 40%; left: 30%; border-radius: 50% 50% 30% 70% / 50% 50% 70% 70%; animation-delay: -10s; opacity: 0.3; }
+
+@keyframes liquidMove {
+    0% { transform: translate(0, 0) rotate(0deg) scale(1); border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+    50% { transform: translate(150px, 50px) rotate(180deg) scale(1.2); border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    100% { transform: translate(-50px, 150px) rotate(360deg) scale(0.9); border-radius: 50% 50% 30% 70% / 50% 50% 70% 70%; }
+}
+
+.glass-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(60px);
+    z-index: -1;
+}
+
+/* =====================================
+   GLOBAL LIQUID GLASS PANEL CLASS
+====================================== */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* =====================================
+   NAVBAR & CRAZY LOGO FORESHADOW
+====================================== */
+.navbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 40px; position: sticky; top: 0; z-index: 100;
+}
+
+.nav-left { display: flex; align-items: center; gap: 15px; }
+
+.crazy-glow-logo {
+    width: 45px; height: 45px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--cyan), var(--purple));
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-heading); font-weight: 900; font-size: 1.6rem;
+    animation: crazyForeshadow 2s infinite alternate;
+}
+
+@keyframes crazyForeshadow {
+    0% { box-shadow: 0 0 10px var(--cyan), 0 0 20px var(--cyan); transform: scale(1); }
+    100% { box-shadow: 0 0 20px var(--purple), 0 0 40px var(--pink), 0 0 60px var(--cyan); transform: scale(1.05); }
+}
+
+.brand-title { font-family: var(--font-heading); font-weight: 900; font-size: 1.6rem; letter-spacing: 2px; }
+
+.search-wrapper { position: relative; width: 320px; }
+.search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); font-size: 0.9rem; opacity: 0.6; }
+.search-box {
+    width: 100%; padding: 12px 15px 12px 40px; border-radius: 25px;
+    background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white; outline: none; transition: 0.3s;
+}
+.search-box:focus { background: rgba(255,255,255,0.1); border-color: var(--cyan); box-shadow: 0 0 15px rgba(0, 229, 255, 0.4); }
+
+.nav-right { display: flex; align-items: center; gap: 20px; }
+.nav-link { background: transparent; border: none; color: white; font-weight: 600; cursor: pointer; font-size: 1rem; }
+.signup-btn {
+    background: linear-gradient(90deg, var(--cyan), var(--purple));
+    padding: 10px 20px; border-radius: 8px; box-shadow: 0 0 15px rgba(157, 0, 255, 0.5);
+}
+
+.three-dot-menu {
+    display: flex; flex-direction: column; gap: 5px; background: transparent; border: none; cursor: pointer; padding: 5px;
+}
+.three-dot-menu span { display: block; width: 6px; height: 6px; background: white; border-radius: 50%; }
+
+/* =====================================
+   SLIDING PANEL
+====================================== */
+.slide-panel {
+    position: fixed; top: 0; right: -400px; width: 350px; height: 100vh;
+    z-index: 200; padding: 30px; transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.slide-panel.active { right: 0; }
+.panel-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 20px;}
+.close-btn { background: transparent; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+.panel-links { list-style: none; display: flex; flex-direction: column; gap: 15px; }
+.panel-links a { text-decoration: none; color: white; font-weight: 600; font-size: 1.1rem; display: block; padding: 12px; border-radius: 8px; background: rgba(255,255,255,0.02);}
+
+/* =====================================
+   LIVE TEXT ANIMATION EFFECTS
+====================================== */
+.live-text-effect {
+    background: linear-gradient(to right, #ffffff, var(--cyan), var(--purple), #ffffff);
+    background-size: 300% auto;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: flowText 4s linear infinite;
+    text-shadow: 0 0 30px rgba(0, 229, 255, 0.4);
+}
+@keyframes flowText {
+    0% { background-position: 0% center; }
+    100% { background-position: 300% center; }
+}
+
+/* =====================================
+   HERO SECTION
+====================================== */
+.container { max-width: 1400px; margin: 0 auto; padding: 60px 40px; }
+.hero-section { display: flex; justify-content: space-between; align-items: center; gap: 40px; margin-bottom: 100px; }
+
+.hero-content { flex: 1; max-width: 650px; }
+.badge {
+    display: inline-block; padding: 8px 16px; border-radius: 20px;
+    background: rgba(157, 0, 255, 0.15); border: 1px solid rgba(157, 0, 255, 0.4);
+    color: #e0b3ff; font-weight: 700; font-size: 0.85rem; letter-spacing: 1px; margin-bottom: 25px;
+}
+.main-heading { font-family: var(--font-heading); font-size: 4.5rem; font-weight: 900; line-height: 1.1; margin-bottom: 20px; }
+.sub-heading { color: var(--text-muted); font-size: 1.1rem; line-height: 1.6; margin-bottom: 40px; }
+
+.action-buttons { display: flex; gap: 20px; }
+.primary-btn, .secondary-btn { padding: 16px 32px; border-radius: 12px; font-weight: 700; font-size: 1.1rem; cursor: pointer; border: none;}
+.primary-btn { background: linear-gradient(135deg, var(--cyan), var(--purple)); color: #000; box-shadow: 0 0 25px rgba(0, 229, 255, 0.5); }
+.secondary-btn { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); }
+
+/* =====================================
+   CRASH-PROOF 360 LIQUID MOCKUP
+====================================== */
+.hero-visual { flex: 1; display: flex; justify-content: center; align-items: center; }
+
+.visual-box {
+    position: relative; width: 550px; height: 380px; 
+    display: flex; justify-content: center; align-items: center;
+    perspective: 1500px;
+}
+
+.rotating-element {
+    width: 100%; height: 100%; position: absolute;
+    transform-style: preserve-3d; transition: transform 0.1s linear; z-index: 5;
+}
+
+.liquid-mockup {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 20px rgba(255,255,255,0.05);
+    display: flex; flex-direction: column; overflow: hidden;
+}
+
+.mockup-header { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.2);}
+.mac-dots { display: flex; gap: 8px; }
+.mac-dots span { width: 12px; height: 12px; border-radius: 50%; }
+.red { background: #ff5f56; box-shadow: 0 0 8px #ff5f56;}
+.yellow { background: #ffbd2e; box-shadow: 0 0 8px #ffbd2e;}
+.green { background: #27c93f; box-shadow: 0 0 8px #27c93f;}
+
+.mockup-body { display: flex; flex-grow: 1; }
+.mockup-sidebar { width: 70px; background: rgba(0,0,0,0.4); border-right: 1px solid rgba(255,255,255,0.05); }
+.mockup-canvas { flex-grow: 1; background: transparent; }
+
+.as-tech-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; justify-content: center; align-items: center;
+    pointer-events: none; z-index: 10;
+}
+.as-tech-text { font-family: var(--font-heading); font-size: 5.5rem; font-weight: 900; letter-spacing: 5px; text-transform: uppercase; }
+
+/* =====================================
+   FEATURE CARDS WITH HOVER ANIMATION
+====================================== */
+.features-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+
+.feature-card { 
+    padding: 35px; border-radius: 20px; display: flex; flex-direction: column; gap: 15px; 
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); position: relative; overflow: hidden; z-index: 1;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.06); 
+    border-color: rgba(0, 229, 255, 0.3); 
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(255, 255, 255, 0.05);
+}
+
+.feature-card::after {
+    content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 0; height: 3px;
+    background: linear-gradient(90deg, var(--cyan), var(--purple), var(--pink)); transition: width 0.4s ease;
+}
+
+.feature-card:hover::after { width: 100%; }
+
+.card-icon { font-size: 2.8rem; }
+.cyan-glow { text-shadow: 0 0 20px var(--cyan); }
+.purple-glow { text-shadow: 0 0 20px var(--purple); }
+.pink-glow { text-shadow: 0 0 20px var(--pink); }
+.feature-card h3 { font-family: var(--font-heading); font-size: 1.5rem; }
+.feature-card p { color: var(--text-muted); line-height: 1.6; }
+
+.pop-effect { animation: popClick 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+@keyframes popClick { 0% { transform: scale(1); } 40% { transform: scale(0.9); } 100% { transform: scale(1); } }
+
+/* ========================================= */
+/* 📱 MOBILE RESPONSIVENESS (AUTO-ADJUST) 🔥 */
+/* ========================================= */
+@media (max-width: 1100px) {
+    .hero-section { flex-direction: column; text-align: center; }
+    .hero-content { margin: 0 auto; }
+    .action-buttons { justify-content: center; }
+    .main-heading { font-size: 3.5rem; }
+}
+
+@media screen and (max-width: 768px) {
+    .search-wrapper, .nav-right .nav-link { display: none; }
+    .three-dot-menu { display: flex; }
+    .hero-section { flex-direction: column; text-align: center; margin-top: 50px; padding: 20px; }
+    .hero-content { align-items: center; width: 100%; }
+    .main-heading { font-size: 2.5rem; line-height: 1.2; }
+    .visual-box { width: 100%; height: 280px; margin-top: 30px; transform: scale(0.9); }
+    .as-tech-text { font-size: 3rem; }
+    .action-buttons { flex-direction: column; width: 100%; gap: 15px; }
+    .features-section { flex-direction: column; align-items: center; padding: 10px; }
+    .feature-card { width: 100%; margin-bottom: 15px; }
+}
