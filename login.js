@@ -1,22 +1,22 @@
-// Firebase login function import kar rahe hain (Google aur Reset wala bhi)
+// Firebase login function import kar rahe hain
 import { loginUser, signInWithGoogle, resetPassword } from './firebase.js';
 
 // =========================================
-// 1. Password Visibility Toggle (DIRECT & FIXED) 🔥
+// 1. Password Visibility Toggle
 // =========================================
 const eyeToggleBtn = document.getElementById('eyeToggle');
 const passwordInput = document.getElementById('password');
 
 if (eyeToggleBtn && passwordInput) {
     eyeToggleBtn.addEventListener('click', function(e) {
-        e.preventDefault(); // Default behavior roko
+        e.preventDefault(); 
         
         if (passwordInput.type === 'password') {
             passwordInput.type = 'text';
-            eyeToggleBtn.innerHTML = '🙈'; // Eye closed
+            eyeToggleBtn.innerHTML = '🙈'; 
         } else {
             passwordInput.type = 'password';
-            eyeToggleBtn.innerHTML = '👁️'; // Eye open
+            eyeToggleBtn.innerHTML = '👁️'; 
         }
     });
 }
@@ -89,27 +89,37 @@ if(loginForm) {
                 loginBtn.style.boxShadow = '';
                 loginBtn.style.pointerEvents = 'auto';
             }
+        }).catch(err => {
+            console.error(err);
+            loginBtn.innerHTML = originalText;
+            loginBtn.style.pointerEvents = 'auto';
         });
     });
 }
 
 // =========================================
-// 5. GOOGLE SIGN-IN BUTTON EVENT
+// 5. GOOGLE SIGN-IN BUTTON EVENT 🔥 (FIXED)
 // =========================================
-const googleBtn = document.querySelector('.social-login .btn-secondary');
+const googleBtn = document.getElementById('googleBtn');
 if (googleBtn) {
     googleBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        const originalText = googleBtn.innerHTML; // Store original text here
+        const originalText = googleBtn.innerHTML; 
         googleBtn.innerHTML = 'Connecting Google... ⏳';
+        googleBtn.style.pointerEvents = 'none';
         
         signInWithGoogle().then((user) => {
             if(user) {
-                // Login successful with Google
+                // Login successful
                 window.location.href = 'index.html'; 
             } else {
-                googleBtn.innerHTML = originalText; // Use stored original text
+                googleBtn.innerHTML = originalText; 
+                googleBtn.style.pointerEvents = 'auto';
             }
+        }).catch(err => {
+            console.error("Google Auth failed: ", err);
+            googleBtn.innerHTML = originalText;
+            googleBtn.style.pointerEvents = 'auto';
         });
     });
 }
@@ -127,15 +137,14 @@ document.addEventListener('mousedown', function(e) {
 });
 
 // =========================================
-// 7. FORGOT PASSWORD LOGIC 🔥
+// 7. FORGOT PASSWORD LOGIC
 // =========================================
 const forgotPassBtn = document.querySelector('.forgot-pass');
 
 if (forgotPassBtn) {
     forgotPassBtn.addEventListener('click', (e) => {
-        e.preventDefault(); // Stop the link from jumping the page
+        e.preventDefault(); 
         
-        // Ask for email via browser prompt
         const emailToReset = prompt("Enter your registered email address to reset password:");
         
         if (emailToReset && emailToReset.trim() !== "") {
@@ -148,9 +157,12 @@ if (forgotPassBtn) {
                 }
                 forgotPassBtn.innerText = 'Forgot Password?';
                 forgotPassBtn.style.pointerEvents = 'auto';
+            }).catch(err => {
+                console.error(err);
+                forgotPassBtn.innerText = 'Forgot Password?';
+                forgotPassBtn.style.pointerEvents = 'auto';
             });
         } else if (emailToReset !== null) {
-            // Null means user clicked cancel, so we only alert if they left it blank
             alert("Email address cannot be empty.");
         }
     });
