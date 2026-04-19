@@ -37,7 +37,7 @@ body {
 
 .storm-overlay {
     position: absolute; inset: 0;
-    /* FIXED: Removed the missing image link to stop the 404 error. Now using pure CSS gradient */
+    /* FIXED: Removed missing image link */
     background: radial-gradient(circle at center, rgba(6, 16, 36, 0.6) 0%, rgba(2, 2, 4, 0.9) 100%); 
     opacity: 0.2; 
     filter: grayscale(80%) blur(5px);
@@ -103,32 +103,26 @@ body {
     overflow: hidden; min-height: 650px;
 }
 
-/* Left Side: LIVE Shield Section (Giltch Fixed, Mouse Tracking Prep) */
 .model-section {
     flex: 1.1; position: relative;
     background: radial-gradient(circle at center, rgba(0, 102, 255, 0.05), transparent 80%);
     display: flex; flex-direction: column; justify-content: center; align-items: center;
     border-right: 1px solid rgba(255,255,255,0.05); min-height: 400px;
-    perspective: 1000px; /* Crucial for JS tracking 3D tilt effect */
+    perspective: 1000px;
 }
 
 .shield-container {
     width: 100%; height: 100%; position: absolute;
     display: flex; justify-content: center; align-items: center;
     pointer-events: none; 
-    transition: transform 0.1s ease-out; /* Smooth JS movement */
+    transition: transform 0.1s ease-out; 
 }
 
 .shield-img {
     max-width: 80%; max-height: 80%; object-fit: contain;
     filter: drop-shadow(0 0 25px rgba(0, 102, 255, 0.6));
-    
-    /* FIXED Problem 1: Removed mix-blend-mode: color-dodge because it's a PNG now */
     mix-blend-mode: normal; 
-    
-    transition: transform 0.1s ease-out; /* Smooth JS tilt/shift */
-    
-    /* CSS FLOATING ANIMATION (Combined with JS) */
+    transition: transform 0.1s ease-out; 
     animation: shieldFloat 5s ease-in-out infinite alternate;
 }
 
@@ -154,7 +148,6 @@ body {
 
 .form-header { margin-bottom: 30px; }
 
-/* Fixed Premium Welcome Text Style */
 .premium-heading { 
     font-family: var(--font-tech); 
     font-size: 2.2rem; 
@@ -257,12 +250,9 @@ body {
     .shield-img { max-width: 60%; }
 }
 
-/* ========================================= */
-/* 📱 MOBILE RESPONSIVENESS (AUTO-ADJUST) */
-/* ========================================= */
 @media screen and (max-width: 768px) {
     .login-glass-panel { flex-direction: column; width: 95%; height: auto; max-height: 90vh; overflow-y: auto; margin-top: 20px; }
-    .model-section { display: none; /* Mobile pe dragon chupao taaki form seedha dikhe */ }
+    .model-section { display: none; }
     .form-section { padding: 30px 20px; width: 100%; }
     .premium-heading { font-size: 1.8rem; }
     .phone-input-row { flex-direction: column; }
