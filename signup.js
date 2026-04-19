@@ -1,5 +1,5 @@
 const canvas = document.getElementById('editorCanvas');
-const ctx = canvas.getContext('2d');
+const ctx = canvas ? canvas.getContext('2d') : null;
 let img = null;
 
 // Editor State
@@ -71,33 +71,38 @@ if(undoBtn) {
     };
 }
 
-uploadInput.onchange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    if (file.type === 'application/pdf') return; 
+// 🔥 FIXED: Added if(uploadInput) check to prevent the 'null' crash
+if (uploadInput) {
+    uploadInput.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (file.type === 'application/pdf') return; 
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-        img = new Image();
-        img.onload = () => {
-            canvas.width = img.width;
-            canvas.height = img.height;
-            layers = []; history = []; selectedLayer = null;
-            if(clearBtn) clearBtn.style.display = 'inline-block';
-            updateUIState();
-            drawEverything();
-        }
-        img.src = event.target.result;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            img = new Image();
+            img.onload = () => {
+                if(canvas) {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                }
+                layers = []; history = []; selectedLayer = null;
+                if(clearBtn) clearBtn.style.display = 'inline-block';
+                updateUIState();
+                drawEverything();
+            }
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
     };
-    reader.readAsDataURL(file);
-};
+}
 
 if(clearBtn) {
     clearBtn.onclick = () => {
         if(confirm("Clear all changes?")) {
             img = null; layers = []; history = []; selectedLayer = null;
-            uploadInput.value = '';
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if(uploadInput) uploadInput.value = '';
+            if(ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
             clearBtn.style.display = 'none';
             updateUIState();
         }
@@ -106,6 +111,7 @@ if(clearBtn) {
 
 // 🔥 ADVANCED MOBILE TOUCH & DESKTOP MOUSE COORDS HANDLER
 function getCoords(e) {
+    if(!canvas) return {x:0, y:0};
     const rect = canvas.getBoundingClientRect();
     
     // Scale X/Y is vital for responsive canvases
@@ -146,7 +152,7 @@ function findClickedLayer(mx, my) {
 
 // 🔥 UNIFIED EVENT LISTENERS (PC + Mobile)
 function handlePointerDown(e) {
-    if(!img) return;
+    if(!img || !ctx) return;
     
     // Sirf touch events par preventDefault karo taaki click aur focus break na ho
     if(e.type === 'touchstart' && e.cancelable) e.preventDefault();
@@ -188,7 +194,7 @@ function handlePointerDown(e) {
 }
 
 function handlePointerMove(e) {
-    if(!img) return;
+    if(!img || !ctx) return;
     if(e.type === 'touchmove' && (isDragging || isResizing || activeTool==='magnify')) {
         if(e.cancelable) e.preventDefault(); 
     }
@@ -230,6 +236,7 @@ function handlePointerMove(e) {
 }
 
 function handlePointerUp(e) {
+    if(!ctx) return;
     if (isDragging && activeTool === 'erase') {
         saveState();
         layers.push({
@@ -245,18 +252,21 @@ function handlePointerUp(e) {
 }
 
 // Mouse Listeners
-canvas.addEventListener('mousedown', handlePointerDown);
-canvas.addEventListener('mousemove', handlePointerMove);
-canvas.addEventListener('mouseup', handlePointerUp);
-canvas.addEventListener('mouseleave', handlePointerUp);
+if(canvas) {
+    canvas.addEventListener('mousedown', handlePointerDown);
+    canvas.addEventListener('mousemove', handlePointerMove);
+    canvas.addEventListener('mouseup', handlePointerUp);
+    canvas.addEventListener('mouseleave', handlePointerUp);
 
-// Touch Listeners (Mobile support)
-canvas.addEventListener('touchstart', handlePointerDown, {passive: false});
-canvas.addEventListener('touchmove', handlePointerMove, {passive: false});
-canvas.addEventListener('touchend', handlePointerUp);
+    // Touch Listeners (Mobile support)
+    canvas.addEventListener('touchstart', handlePointerDown, {passive: false});
+    canvas.addEventListener('touchmove', handlePointerMove, {passive: false});
+    canvas.addEventListener('touchend', handlePointerUp);
+}
 
 function calculateSnapping(mX, mY, layer) {
     activeGuides = [];
+    if(!canvas) return {x: mX, y: mY};
     let nx = mX; let ny = mY;
     let lCx = mX + layer.w / 2; 
     let lCy = mY + layer.h / 2; 
@@ -314,7 +324,7 @@ function updateUIState() {
 }
 
 function updateToolbarPosition() {
-    if(!floatingToolbar) return;
+    if(!floatingToolbar || !canvas) return;
     if (selectedLayer && activeTool === 'move') {
         const rect = canvas.getBoundingClientRect();
         const scaleX = rect.width / canvas.width;
@@ -368,12 +378,15 @@ if(cContainer) cContainer.addEventListener('scroll', updateToolbarPosition);
 const addTextBtn = document.getElementById('addTextBtn');
 if(addTextBtn) {
     addTextBtn.onclick = () => {
-        const text = document.getElementById('textInput').value;
-        if (!text || !img) return;
+        const txtIn = document.getElementById('textInput');
+        if (!txtIn || !img || !ctx) return;
+        const text = txtIn.value;
+        if (!text) return;
+        
         saveState();
-        const size = parseInt(document.getElementById('fontSize').value);
-        const weight = document.getElementById('fontWeight').value;
-        const font = document.getElementById('fontFamily').value;
+        const size = parseInt(document.getElementById('fontSize').value) || 24;
+        const weight = document.getElementById('fontWeight').value || '400';
+        const font = document.getElementById('fontFamily').value || 'Arial';
         
         ctx.font = `${weight} ${size}px "${font}"`;
         const m = ctx.measureText(text.split('\n')[0]);
@@ -393,10 +406,16 @@ if(addTextBtn) {
 
 function liveUpdateText() {
     if (selectedLayer && selectedLayer.type === 'text') {
-        selectedLayer.content = document.getElementById('textInput').value;
-        selectedLayer.size = parseInt(document.getElementById('fontSize').value);
-        selectedLayer.font = document.getElementById('fontFamily').value;
-        selectedLayer.weight = document.getElementById('fontWeight').value;
+        let txtIn = document.getElementById('textInput');
+        let fSize = document.getElementById('fontSize');
+        let fFam = document.getElementById('fontFamily');
+        let fWght = document.getElementById('fontWeight');
+        
+        if(txtIn) selectedLayer.content = txtIn.value;
+        if(fSize) selectedLayer.size = parseInt(fSize.value);
+        if(fFam) selectedLayer.font = fFam.value;
+        if(fWght) selectedLayer.weight = fWght.value;
+        
         drawEverything();
         updateToolbarPosition();
     }
@@ -416,7 +435,7 @@ if(updateTextBtn) updateTextBtn.onclick = () => { saveState(); liveUpdateText();
 const uploadSticker = document.getElementById('uploadSticker');
 if(uploadSticker) {
     uploadSticker.onchange = (e) => {
-        if(!img || !e.target.files[0]) return;
+        if(!img || !e.target.files[0] || !canvas) return;
         const reader = new FileReader();
         reader.onload = (event) => {
             const sImg = new Image();
@@ -437,7 +456,7 @@ if(uploadSticker) {
 }
 
 function drawLayer(l) {
-    if(l.hidden) return;
+    if(l.hidden || !ctx) return;
     if (l.type === 'patch') {
         ctx.fillStyle = l.color;
         ctx.fillRect(l.x, l.y, l.w, l.h);
@@ -482,7 +501,7 @@ function drawLayer(l) {
 }
 
 function drawSelectionBox(l) {
-    if (!l || l.hidden || activeTool !== 'move') return;
+    if (!l || l.hidden || activeTool !== 'move' || !ctx) return;
     ctx.strokeStyle = l.locked ? '#ff4d4d' : '#3d8bff'; 
     ctx.lineWidth = 2;
     ctx.strokeRect(l.x, l.y, l.w, l.h);
@@ -494,7 +513,7 @@ function drawSelectionBox(l) {
 }
 
 function drawGridAndRulers() {
-    if (!showGrid) return;
+    if (!showGrid || !ctx || !canvas) return;
     ctx.save();
     
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
@@ -527,7 +546,7 @@ function drawGridAndRulers() {
 }
 
 function drawEverything() {
-    if (!img) return;
+    if (!img || !ctx || !canvas) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     ctx.drawImage(img, 0, 0);
@@ -573,6 +592,7 @@ function drawEverything() {
 const downloadBtn = document.getElementById('downloadBtn');
 if(downloadBtn) {
     downloadBtn.onclick = () => {
+        if(!canvas) return;
         selectedLayer = null; 
         let tempGridState = showGrid; 
         showGrid = false; 
