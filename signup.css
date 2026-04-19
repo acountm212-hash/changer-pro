@@ -37,9 +37,8 @@ body {
 
 .storm-overlay {
     position: absolute; inset: 0;
-    /* User's existing background storm asset */
-    background: radial-gradient(circle at center, rgba(6, 16, 36, 0.6) 0%, rgba(2, 2, 4, 0.9) 100%), 
-                url('image.png-89d5735c-0130-439d-8d5c-94308ae1d4d7.png') no-repeat center center / cover; 
+    /* FIXED: Removed the missing image link to stop the 404 error. Now using pure CSS gradient */
+    background: radial-gradient(circle at center, rgba(6, 16, 36, 0.6) 0%, rgba(2, 2, 4, 0.9) 100%); 
     opacity: 0.2; 
     filter: grayscale(80%) blur(5px);
     z-index: -3;
@@ -257,6 +256,7 @@ body {
     .form-section { padding: 35px 25px; }
     .shield-img { max-width: 60%; }
 }
+
 /* ========================================= */
 /* 📱 MOBILE RESPONSIVENESS (AUTO-ADJUST) */
 /* ========================================= */
