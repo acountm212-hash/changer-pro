@@ -1,3 +1,6 @@
+// 🔥 FIXED: Added Firebase Import Here
+import { signInWithGoogle } from './firebase.js';
+
 const canvas = document.getElementById('editorCanvas');
 const ctx = canvas ? canvas.getContext('2d') : null;
 let img = null;
@@ -71,7 +74,7 @@ if(undoBtn) {
     };
 }
 
-// 🔥 FIXED: Added if(uploadInput) check to prevent the 'null' crash
+// Check to prevent the 'null' crash
 if (uploadInput) {
     uploadInput.onchange = (e) => {
         const file = e.target.files[0];
@@ -109,7 +112,7 @@ if(clearBtn) {
     };
 }
 
-// 🔥 ADVANCED MOBILE TOUCH & DESKTOP MOUSE COORDS HANDLER
+// ADVANCED MOBILE TOUCH & DESKTOP MOUSE COORDS HANDLER
 function getCoords(e) {
     if(!canvas) return {x:0, y:0};
     const rect = canvas.getBoundingClientRect();
@@ -120,7 +123,6 @@ function getCoords(e) {
     
     let clientX, clientY;
 
-    // Bulletproof Touch vs Mouse check
     if (e.type.includes('touch')) {
         const touch = e.touches[0] || e.changedTouches[0];
         clientX = touch.clientX;
@@ -150,11 +152,10 @@ function findClickedLayer(mx, my) {
     return null;
 }
 
-// 🔥 UNIFIED EVENT LISTENERS (PC + Mobile)
+// UNIFIED EVENT LISTENERS (PC + Mobile)
 function handlePointerDown(e) {
     if(!img || !ctx) return;
     
-    // Sirf touch events par preventDefault karo taaki click aur focus break na ho
     if(e.type === 'touchstart' && e.cancelable) e.preventDefault();
 
     const m = getCoords(e);
@@ -607,4 +608,29 @@ if(downloadBtn) {
         showGrid = tempGridState; 
         drawEverything();
     };
+}
+
+// 🔥 FIXED: GOOGLE SIGN-UP BUTTON EVENT
+const googleSignupBtn = document.getElementById('googleSignupBtn');
+if (googleSignupBtn) {
+    googleSignupBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const originalText = googleSignupBtn.innerHTML; 
+        googleSignupBtn.innerHTML = 'Connecting Google... ⏳';
+        googleSignupBtn.style.pointerEvents = 'none';
+        
+        signInWithGoogle().then((user) => {
+            if(user) {
+                // Signup successful, redirecting
+                window.location.href = 'index.html'; 
+            } else {
+                googleSignupBtn.innerHTML = originalText; 
+                googleSignupBtn.style.pointerEvents = 'auto';
+            }
+        }).catch(err => {
+            console.error("Google Signup failed: ", err);
+            googleSignupBtn.innerHTML = originalText;
+            googleSignupBtn.style.pointerEvents = 'auto';
+        });
+    });
 }
